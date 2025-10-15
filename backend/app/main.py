@@ -1,11 +1,26 @@
-# from typing import List
+from typing import List
 from prometheus_fastapi_instrumentator import Instrumentator
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware  # Add this import
 
 from app import services
 from app.schema import UserIn, BaseResponse, UserListOut
 
 app = FastAPI()
+
+# Add CORS middleware - Add this section
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost",
+        "http://192.168.254.144", 
+        "https://fusionpact-devops-challenge-z5yk.onrender.com",
+        "https://fusionpact-frontend.onrender.com"
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 Instrumentator().instrument(app).expose(app, endpoint="/metrics")
 
